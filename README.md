@@ -1,4 +1,5 @@
 # Algorithms written in Java.
-Leetcode
-HackerRank
-Geeks4geeks
+Question sources:
+- LeetCode.com
+- HackerRank.com
+- Geeks4geeks.com
