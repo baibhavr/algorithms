@@ -6,31 +6,22 @@ import java.util.List;
 import java.util.Set;
 
 public class NQueens {
-	
-	Set<Integer> cols, left2rightDiag, right2leftDiag;
 
 	public List<List<String>> solveNQueens(int n) {
 
-		cols = new HashSet<>();
-		left2rightDiag = new HashSet<>();
-		right2leftDiag = new HashSet<>();
-
 		List<List<String>> ans = new ArrayList<>();
-		helper(n, ans, new ArrayList<>());
+		helper(n, ans, new ArrayList<>(),new HashSet<>(),new HashSet<>(),new HashSet<>());
 		return ans;
 	}
 
-	void helper(int n, List<List<String>> ans, List<String> res) {
+	void helper(int n, List<List<String>> ans, List<String> res, Set<Integer> cols, Set<Integer> left2rightDiag, Set<Integer> right2leftDiag) {
 
 		if (res.size() == n)
 			ans.add(new ArrayList<>(res));
 
 		for (int col = 0; col < n; col++) {
 
-			if (cols.contains(col) ||
-				left2rightDiag.contains(col - res.size()) ||
-				right2leftDiag.contains(col + res.size())
-			)
+			if (cols.contains(col) || left2rightDiag.contains(col - res.size()) || right2leftDiag.contains(col + res.size()))
 				continue;
 
 			cols.add(col);
@@ -43,7 +34,7 @@ public class NQueens {
 			sb.append(".".repeat(n - 1 - col));
 			res.add(sb.toString());
 
-			helper(n, ans, res);
+			helper(n, ans, res, cols, left2rightDiag, right2leftDiag);
 
 			res.remove(res.size() - 1);
 			cols.remove(col);
