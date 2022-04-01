@@ -16,7 +16,7 @@ public class WordLadder {
 	 * @param wordList
 	 * @return
 	 */
-	public int ladderLength2(String beginWord, String endWord, List<String> wordList) {
+	public int ladderLength(String beginWord, String endWord, List<String> wordList) {
 
 		Set<String> words = new HashSet<>(wordList), visited = new HashSet<>();
 
