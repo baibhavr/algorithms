@@ -12,20 +12,36 @@ import java.util.Set;
  * @author baibhav <baibhavr@gmail.com> 2:57:33 AM Apr 19, 2022
  */
 public class SolveSudoku {
-	// Function to find a solved Sudoku.
+
+	/**
+	 * Function to find a solved Sudoku.
+	 * 
+	 * @param grid
+	 * @return
+	 */
 	static boolean SolveSudoku(int grid[][]) {
-		int m = grid.length - 1, n = grid[0].length - 1;
 		List<int[]> emptyCells = new ArrayList<>();
-		for (int i = 0; i <= m; i++) {
-			for (int j = 0; j <= n; j++) {
+		for (int i = 0; i < 9; i++) {
+			for (int j = 0; j < 9; j++) {
 				if (grid[i][j] == 0)
 					emptyCells.add(new int[] { i, j });
 			}
 		}
-		return solve(grid, m, n, emptyCells, 0);
+		return solve(grid, emptyCells, 0);
 	}
 
-	static boolean solve(int[][] grid, int m, int n, List<int[]> emptyCells, int cellId) {
+	/**
+	 * Checks if any sets of values can be inserted into empty cells to get a valid
+	 * solution Using backtracking
+	 * 
+	 * @param grid
+	 * @param m
+	 * @param n
+	 * @param emptyCells
+	 * @param cellId
+	 * @return
+	 */
+	static boolean solve(int[][] grid, List<int[]> emptyCells, int cellId) {
 
 		if (cellId == emptyCells.size())
 			return true;
@@ -33,9 +49,9 @@ public class SolveSudoku {
 		for (int val = 1; val <= 9; val++) {
 
 			int[] cell = emptyCells.get(cellId);
-			if (valid(grid, m, n, cell[0], cell[1], val)) {
+			if (valid(grid, cell[0], cell[1], val)) {
 				grid[cell[0]][cell[1]] = val;
-				if (solve(grid, m, n, emptyCells, cellId + 1))
+				if (solve(grid, emptyCells, cellId + 1))
 					return true;
 				grid[cell[0]][cell[1]] = 0;
 			}
@@ -43,20 +59,31 @@ public class SolveSudoku {
 		return false;
 	}
 
-	static boolean valid(int[][] grid, int m, int n, int row, int col, int value) {
+	/**
+	 * Check if current value is valid to be inserted in the cell(row,col)
+	 * 
+	 * @param grid
+	 * @param m
+	 * @param n
+	 * @param row
+	 * @param col
+	 * @param value
+	 * @return
+	 */
+	static boolean valid(int[][] grid, int row, int col, int value) {
 
-		for (int i = 0; i <= m; i++)
+		for (int i = 0; i < 9; i++)
 			if (grid[i][col] == value)
 				return false;
 
-		for (int i = 0; i <= n; i++)
+		for (int i = 0; i < 9; i++)
 			if (grid[row][i] == value)
 				return false;
 
 		int startRow = row / 3 * 3;
 		int startCol = col / 3 * 3;
-		for (int i = startRow; i < startRow + 3 && i <= m; i++) {
-			for (int j = startCol; j < startCol + 3 && j <= n; j++) {
+		for (int i = startRow; i < startRow + 3 && i < 9; i++) {
+			for (int j = startCol; j < startCol + 3 && j < 9; j++) {
 				if (grid[i][j] == value)
 					return false;
 			}
@@ -64,7 +91,11 @@ public class SolveSudoku {
 		return true;
 	}
 
-	// Function to print grids of the Sudoku.
+	/**
+	 * Function to print grids of the Sudoku.
+	 * 
+	 * @param grid
+	 */
 	static void printGrid(int grid[][]) {
 		for (int i = 0; i < 9; i++) {
 			for (int j = 0; j < 9; j++) {
