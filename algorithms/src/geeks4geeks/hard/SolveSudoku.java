@@ -14,49 +14,54 @@ import java.util.Set;
 public class SolveSudoku {
 	// Function to find a solved Sudoku.
 	static boolean SolveSudoku(int grid[][]) {
-		List<int[]> emptyAt = new ArrayList<>();
-
-		for (int i = 0; i < 9; i++) {
-			for (int j = 0; j < 9; j++) {
-
-				int cur = grid[i][j];
-				if (cur == 0)
-					emptyAt.add(new int[] { i, j });
+		int m = grid.length - 1, n = grid[0].length - 1;
+		List<int[]> emptyCells = new ArrayList<>();
+		for (int i = 0; i <= m; i++) {
+			for (int j = 0; j <= n; j++) {
+				if (grid[i][j] == 0)
+					emptyCells.add(new int[] { i, j });
 			}
 		}
-		return solve(grid, emptyAt, 0);
+		return solve(grid, m, n, emptyCells, 0);
 	}
 
-	static boolean solve(int grid[][], List<int[]> emptyAt, int cur) {
+	static boolean solve(int[][] grid, int m, int n, List<int[]> emptyCells, int cellId) {
 
-		if (cur == emptyAt.size())
+		if (cellId == emptyCells.size())
 			return true;
-		int row = emptyAt.get(cur)[0];
-		int col = emptyAt.get(cur)[1];
 
-		// candidates for current
-		Set<Integer> candidates = new HashSet<>(Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9));
-		for (int i = 0; i < 9; i++) {
-			candidates.remove(grid[row][i]); // rows
-			candidates.remove(grid[i][col]); // cols
-		}
+		for (int val = 1; val <= 9; val++) {
 
-		int startRow = row / 3 * 3, startCol = col / 3 * 3;
-		for (int i = 0; i < 3; i++) {
-			for (int j = 0; j < 3; j++) {
-				candidates.remove(grid[startRow + i][startCol + j]); // square
+			int[] cell = emptyCells.get(cellId);
+			if (valid(grid, m, n, cell[0], cell[1], val)) {
+				grid[cell[0]][cell[1]] = val;
+				if (solve(grid, m, n, emptyCells, cellId + 1))
+					return true;
+				grid[cell[0]][cell[1]] = 0;
 			}
 		}
-
-		// use recursion backtracking on candidates
-		for (int c : candidates) {
-
-			grid[row][col] = c;
-			if (solve(grid, emptyAt, cur + 1))
-				return true;
-			grid[row][col] = 0;
-		}
 		return false;
+	}
+
+	static boolean valid(int[][] grid, int m, int n, int row, int col, int value) {
+
+		for (int i = 0; i <= m; i++)
+			if (grid[i][col] == value)
+				return false;
+
+		for (int i = 0; i <= n; i++)
+			if (grid[row][i] == value)
+				return false;
+
+		int startRow = row / 3 * 3;
+		int startCol = col / 3 * 3;
+		for (int i = startRow; i < startRow + 3 && i <= m; i++) {
+			for (int j = startCol; j < startCol + 3 && j <= n; j++) {
+				if (grid[i][j] == value)
+					return false;
+			}
+		}
+		return true;
 	}
 
 	// Function to print grids of the Sudoku.
