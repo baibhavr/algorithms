@@ -8,28 +8,32 @@ package leetcode.medium;
 public class CountLatticePointsInCircle {
 	
 	public int countLatticePoints(int[][] circles) {
-		int ans = 0;
-		for (int i = 0; i <= 200; i++) {
-			for (int j = 0; j <= 200; j++) {
-				for (int[] circle : circles) {
-					if (insideCircle(i, j, circle)) {
-						ans++;
-						break;
-					}
-				}
-			}
-		}
-		return ans;
-	}
-
-	boolean insideCircle(int x, int y, int[] circle) {
-		int cx = circle[0], cy = circle[1];
-		int r = circle[2];
+	       
+        // Bounding box for overall search space
+        // (i.e. smallest rectangle that covers all the circles)
 		
-		// bounding box
-		int dx = cx - x, dy = cy - y;
-		if (Math.abs(dx) > r || Math.abs(dy) > r)
-			return false;
-		return dx * dx + dy * dy <= r * r;
-	}
+        int xMin=200,xMax=-1,yMin=200,yMax=-1;
+
+        for(int[] c:circles){
+            xMin = Math.min(xMin,c[0]-c[2]);
+            xMax = Math.max(xMax,c[0]+c[2]);
+            
+            yMin = Math.min(yMin,c[1]-c[2]);
+            yMax = Math.max(yMax,c[1]+c[2]);
+        }
+        
+        int ans = 0;
+        
+        for(int x=xMin; x<=xMax; x++){
+            for(int y=yMin; y<=yMax; y++){
+                for(int[] c:circles){
+                    if((c[0]-x)*(c[0]-x)+(c[1]-y)*(c[1]-y)<= c[2]*c[2]){ // Inside circle or not?
+                        ans++;
+                        break;
+                    }
+                }
+            }
+        }
+        return ans;
+    }
 }
